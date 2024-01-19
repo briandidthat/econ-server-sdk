@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "econ_server_sdk_briandidthat
+version = "0.0.1"
+authors = [
+  { name="briandidthat, email="author@example.com" },
+]
+description = "Sdk to simplify fetching economic data using the econ-server project"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/briandidthat/econ-server-sdk"
+Issues = "https://github.com/briandidthat/econ-server-sdk/issues"
