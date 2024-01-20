@@ -9,8 +9,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 class CryptoApi:
-    def __init__(self, user: str, base_url: str):
-        self.__caller = user
+    def __init__(self, username: str, base_url: str):
+        self.__caller = username
         self.__base_url = base_url
         self.__logger = logging.getLogger("Crypto-API")
 
@@ -110,8 +110,8 @@ class CryptoApi:
 
 # ======================================== FRED API ========================================
 class FredApi:
-    def __init__(self, user: str, base_url: str, api_key: str):
-        self.__caller = user
+    def __init__(self, username: str, base_url: str, api_key: str):
+        self.__caller = username
         self.__base_url = base_url
         self.__api_key = api_key
         self.__logger = logging.getLogger("Fred-API")
@@ -165,10 +165,10 @@ class FredApi:
 
 # ======================================== STOCK API ========================================
 class StockApi:
-    def __init__(self, user: str, base_url: str, api_key: str):
+    def __init__(self, username: str, base_url: str, api_key: str):
         self.__api_key = api_key
         self.__base_url = base_url
-        self.__caller = user
+        self.__caller = username
         self.__logger = logging.getLogger("Stock-API")
 
     def set_api_key(self, api_key: str):
@@ -211,7 +211,7 @@ class StockApi:
 
 
 class EconServerClient:
-    def __init__(self, user: str, base_url: str, fred_api_key: str, stock_api_key: str):
-        self.crypto_api = CryptoApi(user, base_url)
-        self.fred_api = FredApi(user, base_url, fred_api_key)
-        self.stock_api = StockApi(user, base_url, stock_api_key)
+    def __init__(self, username: str, base_url: str, fred_api_key: str, stock_api_key: str):
+        self.crypto_api = CryptoApi(username, base_url)
+        self.fred_api = FredApi(username, base_url, fred_api_key)
+        self.stock_api = StockApi(username, base_url, stock_api_key)

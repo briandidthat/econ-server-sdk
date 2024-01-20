@@ -15,6 +15,6 @@ econ_server_url = YOUR_ECON_SERVER_INSTANCE_URL
 fred_api_key = YOUR_FRED_API_KEY
 twelve_api_key = YOUR_TWELVE_DATA_API_KEY
 
-# instantiate econ server client
-client = EconServerClient(econ_server_url, fred_api_key, twelve_api_key)
+# instantiate econ server client (username can be any string of your choice)
+client = EconServerClient(username, econ_server_url, fred_api_key, twelve_api_key)
 ```
