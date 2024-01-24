@@ -56,9 +56,30 @@ def new_mortgage_rate_observation() -> Observation:
 @pytest.fixture(scope="module")
 def new_mortgage_rate_observations() -> List[Observation]:
     observations = [
-        Observation("2018-01-01", "2024-01-01", "2024-01-01", "6.75"),
-        Observation("2018-01-01", "2024-01-01", "2023-12-01", "6.69"),
-        Observation("2018-01-01", "2024-01-01", "2023-11-01", "6.91"),
+        Observation(
+            **{
+                "realtime_start": "2018-01-01",
+                "realtime_end": "2024-01-01",
+                "date": "2024-01-01",
+                "value": "6.75",
+            }
+        ),
+        Observation(
+            **{
+                "realtime_start": "2018-01-01",
+                "realtime_end": "2024-01-01",
+                "date": "2023-12-01",
+                "value": "6.69",
+            }
+        ),
+        Observation(
+            **{
+                "realtime_start": "2018-01-01",
+                "realtime_end": "2024-01-01",
+                "date": "2023-11-01",
+                "value": "6.91",
+            }
+        ),
     ]
 
     return observations
