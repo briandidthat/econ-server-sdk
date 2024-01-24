@@ -2,12 +2,14 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+
 # CRYPTO API MODELS
 class SpotPrice(BaseModel):
     symbol: str
     currency: str
     amount: str
     date: str
+
 
 class Statistic(BaseModel):
     symbol: str
@@ -18,6 +20,7 @@ class Statistic(BaseModel):
     start_date: str = Field(alias="startDate")
     end_date: str = Field(alias="endDate")
     time_frame: str = Field(alias="timeFrame")
+
 
 # STOCK API MODELS
 class StockPrice(BaseModel):
