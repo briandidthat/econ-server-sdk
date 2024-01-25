@@ -21,6 +21,18 @@ def spot_price() -> SpotPrice:
 
 
 @pytest.fixture(scope="module")
+def historical_spot_price():
+    return SpotPrice(
+        **{
+            "symbol": "BTC",
+            "currency": "USD",
+            "amount": "30000.00",
+            "date": "2023-01-01",
+        }
+    )
+
+
+@pytest.fixture(scope="module")
 def spot_prices() -> List[SpotPrice]:
     spot_prices = [
         SpotPrice(
