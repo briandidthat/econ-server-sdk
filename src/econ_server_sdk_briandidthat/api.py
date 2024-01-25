@@ -69,7 +69,6 @@ class CryptoApi:
             self.__logger.info(
                 f"Completed statistics request for {symbol}. Timeframe: {start_date} -> {end_date}"
             )
-            print(statistic)
             return statistic
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
