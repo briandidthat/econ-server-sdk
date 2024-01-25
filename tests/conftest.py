@@ -9,7 +9,7 @@ from src.econ_server_sdk_briandidthat.models import (
 
 
 @pytest.fixture(scope="module")
-def new_spot_price() -> SpotPrice:
+def spot_price() -> SpotPrice:
     return SpotPrice(
         **{
             "symbol": "BTC",
@@ -21,7 +21,38 @@ def new_spot_price() -> SpotPrice:
 
 
 @pytest.fixture(scope="module")
-def new_statistic() -> Statistic:
+def spot_prices() -> List[SpotPrice]:
+    spot_prices = [
+        SpotPrice(
+            **{
+                "symbol": "BTC",
+                "currency": "USD",
+                "amount": "40000.00",
+                "date": "2024-01-01",
+            }
+        ),
+        SpotPrice(
+            **{
+                "symbol": "ETH",
+                "currency": "USD",
+                "amount": "2000.00",
+                "date": "2024-01-01",
+            }
+        ),
+        SpotPrice(
+            **{
+                "symbol": "AVAX",
+                "currency": "USD",
+                "amount": "30.00",
+                "date": "2024-01-01",
+            }
+        ),
+    ]
+    return spot_prices
+
+
+@pytest.fixture(scope="module")
+def statistic() -> Statistic:
     return Statistic(
         **{
             "symbol": "BTC",
@@ -37,12 +68,12 @@ def new_statistic() -> Statistic:
 
 
 @pytest.fixture(scope="module")
-def new_stock_price() -> StockPrice:
+def stock_price() -> StockPrice:
     return StockPrice(**{"symbol": "AAPL", "price": "200.00"})
 
 
 @pytest.fixture(scope="module")
-def new_mortgage_rate_observation() -> Observation:
+def mortgage_rate_observation() -> Observation:
     return Observation(
         **{
             "realtime_start": "2018-01-01",
@@ -54,7 +85,7 @@ def new_mortgage_rate_observation() -> Observation:
 
 
 @pytest.fixture(scope="module")
-def new_mortgage_rate_observations() -> List[Observation]:
+def mortgage_rate_observations() -> List[Observation]:
     observations = [
         Observation(
             **{
@@ -81,5 +112,4 @@ def new_mortgage_rate_observations() -> List[Observation]:
             }
         ),
     ]
-
     return observations
