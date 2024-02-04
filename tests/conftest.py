@@ -87,7 +87,7 @@ def fred_response() -> FredResponse:
     return FredResponse(
         observation_start="2018-01-01",
         observation_end="2024-01-01",
-        count="3",
+        count=3,
         observations=[
             Observation(
                 realtime_start="2018-01-01",

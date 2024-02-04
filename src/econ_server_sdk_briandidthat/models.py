@@ -62,5 +62,5 @@ class Observation(BaseModel):
 class FredResponse(BaseModel):
     observation_start: str = Field("observationStart")
     observation_end: str = Field("observationEnd")
-    count: str
+    count: int
     observations: List[Observation]
