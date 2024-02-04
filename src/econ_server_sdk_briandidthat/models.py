@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+from typing import List
+
 from pydantic import BaseModel, Field
 
 
@@ -47,6 +49,7 @@ class FredOperation(StrEnum):
     TEN_YEAR_TREASURY_YIELD = "tenYearTreasuryYield"
     UNEMPLOYMENT_RATE = "unemploymentRate"
     FEDERAL_FUNDS_RATE = "federalFundsRate"
+    DELINQUENCY_RATE = "delinquencyRate"
 
 
 class Observation(BaseModel):
@@ -54,3 +57,10 @@ class Observation(BaseModel):
     realtime_end: str
     date: str
     value: str
+
+
+class FredResponse(BaseModel):
+    observation_start: str = Field("observationStart")
+    observation_end: str = Field("observationEnd")
+    count: str
+    observations: List[Observation]

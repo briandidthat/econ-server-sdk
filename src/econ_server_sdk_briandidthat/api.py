@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, List
 
 import httpx
 
@@ -9,6 +9,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 class CryptoApi:
+    """This class contains the logic for making crypto spot price requests from the price server"""
+
     def __init__(self, username: str, base_url: str):
         self.__caller = username
         self.__base_url = base_url
@@ -65,6 +67,7 @@ class CryptoApi:
                 params=params,
                 headers=headers,
             )
+            self.__logger.info("Response: ", response.json())
             statistic = Statistic(**response.json())
             self.__logger.info(
                 f"Completed statistics request for {symbol}. Timeframe: {start_date} -> {end_date}"
@@ -98,7 +101,9 @@ class CryptoApi:
                 f"Fetching multiple historical spot prices for: {','.join([s[0] for s in reqs])}"
             )
             response = httpx.post(
-                f"{self.__base_url}/crypto/spot/batch", json=reqs, headers=headers
+                f"{self.__base_url}/crypto/spot/batch/historical",
+                json=reqs,
+                headers=headers,
             )
             historical_spot_prices = [SpotPrice(**s) for s in response.json()]
             self.__logger.info(f"Completed batch historical request for {reqs}")
@@ -109,11 +114,21 @@ class CryptoApi:
 
 # ======================================== FRED API ========================================
 class FredApi:
+    """This class contains the logic for making FRED requests\n
+    Args:\n
+        username: username of choice\n
+        base_url: url of the deployed econ-server instance\n
+        api_key: FRED api key
+    """
+
     def __init__(self, username: str, base_url: str, api_key: str):
         self.__caller = username
         self.__base_url = base_url
         self.__api_key = api_key
         self.__logger = logging.getLogger("Fred-API")
+
+    def get_api_key(self) -> str:
+        return self.__api_key
 
     def set_api_key(self, api_key: str):
         self.__api_key = api_key
@@ -121,7 +136,7 @@ class FredApi:
 
     def get_observations(
         self, operation: FredOperation, params: dict[str, Any]
-    ) -> list[Observation]:
+    ) -> List[Observation]:
         # default file type is XML so if not provided in params dictionary, manually set to json
         if params.get("file_type") is None:
             params["file_type"] = "json"
@@ -169,6 +184,9 @@ class StockApi:
         self.__base_url = base_url
         self.__caller = username
         self.__logger = logging.getLogger("Stock-API")
+
+    def get_api_key(self) -> str:
+        return self.__api_key
 
     def set_api_key(self, api_key: str):
         self.__api_key = api_key
