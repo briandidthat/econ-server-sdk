@@ -22,7 +22,8 @@ def test_stock_price(stock_price):
 
 
 def test_fred_response(fred_response):
-    assert (fred_response.observations) == 3
+    assert fred_response.count == 3
+    assert len(fred_response.observations) == 3
 
 
 def test_observation(observation):
