@@ -57,13 +57,13 @@ def spot_prices() -> List[SpotPrice]:
 def statistic() -> Statistic:
     return Statistic(
         symbol="BTC",
-        startPrice="30000.00",
-        endPrice="40000.00",
-        priceChange="10000.00",
-        percentChange="25.00",
-        startDate="2023-01-01",
-        endDate="2024-01-01",
-        timeFrame="12 months",
+        start_price="30000.00",
+        end_price="40000.00",
+        price_change="10000.00",
+        percent_change="25.00",
+        start_date="2023-01-01",
+        end_date="2024-01-01",
+        time_frame="12 months",
     )
 
 

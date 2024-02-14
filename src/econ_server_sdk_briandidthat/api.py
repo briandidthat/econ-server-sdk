@@ -9,7 +9,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 class CryptoApi:
-    """This class contains the logic for making crypto spot price requests from the price server"""
+    """This class encapsulates the logic for making crypto spot price requests from the price server\n
+    Args:\n
+        username: username of choice\n
+        base_url: url of the deployed econ-server instance\n
+    """
 
     def __init__(self, username: str, base_url: str):
         self.__caller = username
@@ -179,6 +183,13 @@ class FredApi:
 
 # ======================================== STOCK API ========================================
 class StockApi:
+    """This class encapsulates the logic for making stock price requests\n
+    Args:\n
+        username: username of choice\n
+        base_url: url of the deployed econ-server instance\n
+        api_key: Twelve data api key
+    """
+
     def __init__(self, username: str, base_url: str, api_key: str):
         self.__api_key = api_key
         self.__base_url = base_url

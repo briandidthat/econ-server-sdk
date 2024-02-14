@@ -6,7 +6,6 @@ username = "tester"
 api_key = "abcdefg"
 headers = {"caller": username, "apiKey": api_key}
 
-
 fred_api = FredApi(username, url, api_key)
 
 
