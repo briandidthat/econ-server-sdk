@@ -1,13 +1,11 @@
 from src.econ_server_sdk_briandidthat.api import CryptoApi
 from httpx import Response
 
-import json
-
 test_url = "http://locahost:8080"
 test_username = "tester"
 test_headers = {"caller": test_username}
 
-crypto_api = CryptoApi(test_username, test_url) 
+crypto_api = CryptoApi(test_username, test_url)
 
 
 def test_get_spot_price(spot_price, respx_mock):
