@@ -2,7 +2,7 @@ from enum import StrEnum
 
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 # CRYPTO API MODELS
@@ -14,6 +14,8 @@ class SpotPrice(BaseModel):
 
 
 class Statistic(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     symbol: str
     start_price: str = Field(alias="startPrice")
     end_price: str = Field(alias="endPrice")
@@ -33,23 +35,23 @@ class StockPrice(BaseModel):
 # FRED API MODELS
 class FredOperation(StrEnum):
     """
-    This enum contains the FRED series id's that we are interested in using (can add more later)
+    This enum contains the FRED series id's that are relevant to this project
     """
 
-    SP_500 = "sp500"
-    NASDAQ = "nasdaq100"
-    CORE_CPI = "coreCpi"
-    STICKY_CPI = "stickyCpi"
-    TOTAL_PUBLIC_DEBT = "totalPublicDebt"
-    AVERAGE_MORTGAGE_RATE = "averageMortgageRate"
-    AVERAGE_HOME_SALE_PRICE = "averageHomeSalePrice"
-    DEBT_TO_GDP = "debtToGdp"
-    ONE_YEAR_TREASURY_YIELD = "oneYearTreasuryYield"
-    FIVE_YEAR_TREASURY_YIELD = "fiveYearTreasuryYield"
-    TEN_YEAR_TREASURY_YIELD = "tenYearTreasuryYield"
-    UNEMPLOYMENT_RATE = "unemploymentRate"
-    FEDERAL_FUNDS_RATE = "federalFundsRate"
-    DELINQUENCY_RATE = "delinquencyRate"
+    SP_500 = "SP500"
+    NASDAQ = "NASDAQ100"
+    CORE_CPI = "CPILFESL"
+    STICKY_CPI = "CORESTICKM159SFRBATL"
+    TOTAL_PUBLIC_DEBT = "GFDEBTN"
+    AVERAGE_MORTGAGE_RATE = "MORTGAGE30US"
+    AVERAGE_HOME_SALE_PRICE = "ASPUS"
+    DEBT_TO_GDP = "GFDEGDQ188S"
+    ONE_YEAR_TREASURY_YIELD = "DGS1"
+    FIVE_YEAR_TREASURY_YIELD = "DGS5"
+    TEN_YEAR_TREASURY_YIELD = "DGS10"
+    UNEMPLOYMENT_RATE = "U2RATE"
+    FEDERAL_FUNDS_RATE = "FEDFUNDS"
+    DELINQUENCY_RATE = "DRCCLACBS"
 
 
 class Observation(BaseModel):
@@ -60,7 +62,9 @@ class Observation(BaseModel):
 
 
 class FredResponse(BaseModel):
-    observation_start: str = Field("observationStart")
-    observation_end: str = Field("observationEnd")
+    model_config = ConfigDict(populate_by_name=True)
+
+    observation_start: str = Field(alias="observationStart")
+    observation_end: str = Field(alias="observationEnd")
     count: int
     observations: List[Observation]
