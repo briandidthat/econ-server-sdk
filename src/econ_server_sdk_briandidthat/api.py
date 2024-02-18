@@ -3,7 +3,15 @@ from typing import Any, List
 
 import httpx
 
-from .models import Observation, SpotPrice, FredOperation, Statistic, StockPrice
+from .models import (
+    Observation,
+    SpotPrice,
+    FredOperation,
+    Statistic,
+    StockPrice,
+    BatchRequest,
+    BatchResponse,
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -80,7 +88,7 @@ class CryptoApi:
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
-    def get_multiple_spot_prices(self, symbols: list[str]) -> list[SpotPrice]:
+    def get_multiple_spot_prices(self, symbols: list[str]) -> BatchResponse:
         params = {"symbols": ",".join(symbols)}
         headers = dict(caller=self.__caller)
 
@@ -89,28 +97,29 @@ class CryptoApi:
             response = httpx.get(
                 f"{self.__base_url}/crypto/spot/batch", params=params, headers=headers
             )
-            spot_prices = [SpotPrice(**s) for s in response.json()]
+            spot_prices = BatchResponse(**response.json())
             self.__logger.info(f"Completed batch request for {symbols}.")
             return spot_prices
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
     def get_multiple_historical_spot_prices(
-        self, reqs: list[tuple[str, str]]
-    ) -> list[SpotPrice]:
+        self, batch_request: BatchRequest
+    ) -> BatchResponse:
         headers = dict(caller=self.__caller)
+        symbols = ",".join([s.symbol for s in batch_request.requests])
 
         try:
             self.__logger.debug(
-                f"Fetching multiple historical spot prices for: {','.join([s[0] for s in reqs])}"
+                f"Fetching multiple historical spot prices for: {symbols}"
             )
             response = httpx.post(
                 f"{self.__base_url}/crypto/spot/batch/historical",
-                json=reqs,
+                json=batch_request.model_dump_json(),
                 headers=headers,
             )
-            historical_spot_prices = [SpotPrice(**s) for s in response.json()]
-            self.__logger.info(f"Completed batch historical request for {reqs}")
+            historical_spot_prices = BatchResponse(**response.json())
+            self.__logger.info(f"Completed batch historical request for {symbols}")
             return historical_spot_prices
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")

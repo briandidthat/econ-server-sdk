@@ -41,7 +41,7 @@ class BatchRequest(BaseModel):
 class BatchResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    spot_prices: List[SpotPrice]
+    spot_prices: List[SpotPrice] = Field(alias="spotPrices")
 
 
 # STOCK API MODELS
