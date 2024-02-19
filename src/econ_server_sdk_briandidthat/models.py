@@ -27,11 +27,8 @@ class Statistic(BaseModel):
 
 
 class Request(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
-
     symbol: str
-    start_date: str = Field(alias="startDate")
-    end_date: str = Field(alias="endDate")
+    date: str
 
 
 class BatchRequest(BaseModel):
