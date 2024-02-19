@@ -26,6 +26,21 @@ class Statistic(BaseModel):
     time_frame: str = Field(alias="timeFrame")
 
 
+class Request(BaseModel):
+    symbol: str
+    date: str
+
+
+class BatchRequest(BaseModel):
+    requests: List[Request]
+
+
+class BatchResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    spot_prices: List[SpotPrice] = Field(alias="spotPrices")
+
+
 # STOCK API MODELS
 class StockPrice(BaseModel):
     symbol: str

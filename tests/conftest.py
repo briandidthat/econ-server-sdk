@@ -1,6 +1,9 @@
 import pytest
 from typing import List
 from src.econ_server_sdk_briandidthat.models import (
+    Request,
+    BatchRequest,
+    BatchResponse,
     SpotPrice,
     StockPrice,
     Statistic,
@@ -10,7 +13,7 @@ from src.econ_server_sdk_briandidthat.models import (
 
 
 @pytest.fixture(scope="module")
-def spot_price() -> SpotPrice:
+def spot_price_mock() -> SpotPrice:
     return SpotPrice(
         symbol="BTC",
         currency="USD",
@@ -20,7 +23,7 @@ def spot_price() -> SpotPrice:
 
 
 @pytest.fixture(scope="module")
-def historical_spot_price():
+def historical_spot_price_mock():
     return SpotPrice(
         symbol="BTC",
         currency="USD",
@@ -30,31 +33,44 @@ def historical_spot_price():
 
 
 @pytest.fixture(scope="module")
-def spot_prices() -> List[SpotPrice]:
-    return [
-        SpotPrice(
-            symbol="BTC",
-            currency="USD",
-            amount="40000.00",
-            date="2024-01-01",
-        ),
-        SpotPrice(
-            symbol="ETH",
-            currency="USD",
-            amount="2000.00",
-            date="2024-01-01",
-        ),
-        SpotPrice(
-            symbol="AVAX",
-            currency="USD",
-            amount="30.00",
-            date="2024-01-01",
-        ),
-    ]
+def batch_request_mock() -> BatchRequest:
+    return BatchRequest(
+        requests=[
+            Request(symbol="BTC", date="2024-01-01"),
+            Request(symbol="ETH", date="2024-01-01"),
+            Request(symbol="AVAX", date="2024-01-01"),
+        ]
+    )
 
 
 @pytest.fixture(scope="module")
-def statistic() -> Statistic:
+def batch_response_mock() -> BatchResponse:
+    return BatchResponse(
+        spot_prices=[
+            SpotPrice(
+                symbol="BTC",
+                currency="USD",
+                amount="40000.00",
+                date="2024-01-01",
+            ),
+            SpotPrice(
+                symbol="ETH",
+                currency="USD",
+                amount="2000.00",
+                date="2024-01-01",
+            ),
+            SpotPrice(
+                symbol="AVAX",
+                currency="USD",
+                amount="30.00",
+                date="2024-01-01",
+            ),
+        ]
+    )
+
+
+@pytest.fixture(scope="module")
+def statistic_mock() -> Statistic:
     return Statistic(
         symbol="BTC",
         start_price="30000.00",
@@ -68,12 +84,12 @@ def statistic() -> Statistic:
 
 
 @pytest.fixture(scope="module")
-def stock_price() -> StockPrice:
+def stock_price_mock() -> StockPrice:
     return StockPrice(symbol="AAPL", price="200.00")
 
 
 @pytest.fixture(scope="module")
-def observation() -> Observation:
+def observation_mock() -> Observation:
     return Observation(
         realtime_start="2018-01-01",
         realtime_end="2024-01-01",
@@ -83,7 +99,7 @@ def observation() -> Observation:
 
 
 @pytest.fixture(scope="module")
-def fred_response() -> FredResponse:
+def fred_response_mock() -> FredResponse:
     return FredResponse(
         observation_start="2018-01-01",
         observation_end="2024-01-01",
