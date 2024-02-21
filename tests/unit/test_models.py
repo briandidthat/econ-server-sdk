@@ -1,7 +1,6 @@
 def test_spot_price(spot_price_mock):
     assert spot_price_mock.symbol == "BTC"
-    assert spot_price_mock.currency == "USD"
-    assert spot_price_mock.amount == "40000.00"
+    assert spot_price_mock.price == "40000.00"
     assert spot_price_mock.date == "2024-01-01"
 
 
@@ -19,6 +18,7 @@ def test_statistic(statistic_mock):
 def test_stock_price(stock_price_mock):
     assert stock_price_mock.symbol == "AAPL"
     assert stock_price_mock.price == "200.00"
+    assert stock_price_mock.date == "2024-01-01"
 
 
 def test_fred_response(fred_response_mock):

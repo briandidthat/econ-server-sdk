@@ -5,10 +5,9 @@ import httpx
 
 from .models import (
     Observation,
-    SpotPrice,
+    AssetPrice,
     FredOperation,
     Statistic,
-    StockPrice,
     BatchRequest,
     BatchResponse,
 )
@@ -28,7 +27,7 @@ class CryptoApi:
         self.__base_url = base_url
         self.__logger = logging.getLogger("Crypto-API")
 
-    def get_spot_price(self, symbol: str) -> SpotPrice:
+    def get_spot_price(self, symbol: str) -> AssetPrice:
         params = {"symbol": symbol}
         headers = dict(caller=self.__caller)
 
@@ -37,13 +36,13 @@ class CryptoApi:
             response = httpx.get(
                 f"{self.__base_url}/crypto/spot", params=params, headers=headers
             )
-            spot_price = SpotPrice(**response.json())
+            spot_price = AssetPrice(**response.json())
             self.__logger.info(f"Completed spot price request for {symbol}")
             return spot_price
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
-    def get_historical_spot_price(self, symbol: str, date: str) -> SpotPrice:
+    def get_historical_spot_price(self, symbol: str, date: str) -> AssetPrice:
         params = {"symbol": symbol, "date": date}
         headers = dict(caller=self.__caller)
 
@@ -56,7 +55,7 @@ class CryptoApi:
                 params=params,
                 headers=headers,
             )
-            historical_spot_price = SpotPrice(**response.json())
+            historical_spot_price = AssetPrice(**response.json())
             self.__logger.info(
                 f"Completed historical spot price request for {symbol}. Date: {date}"
             )
@@ -212,7 +211,7 @@ class StockApi:
         self.__api_key = api_key
         self.__logger.info("Stock API key updated")
 
-    def get_stock_price(self, symbol: str) -> StockPrice:
+    def get_stock_price(self, symbol: str) -> AssetPrice:
         params = {"symbol": symbol}
         headers = dict(apiKey=self.__api_key, caller=self.__caller)
 
@@ -221,13 +220,13 @@ class StockApi:
             response = httpx.get(
                 f"{self.__base_url}/stocks", params=params, headers=headers
             )
-            stock_price = StockPrice(**response.json())
+            stock_price = AssetPrice(**response.json())
             self.__logger.info(f"Completed stock price request for {symbol}")
             return stock_price
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
-    def get_multiple_stock_prices(self, symbols: list[str]) -> list[StockPrice]:
+    def get_multiple_stock_prices(self, symbols: list[str]) -> BatchResponse:
         params = {"symbols": ",".join(symbols)}
         headers = dict(apiKey=self.__api_key, caller=self.__caller)
 
@@ -237,9 +236,9 @@ class StockApi:
                 f"{self.__base_url}/stocks/batch", params=params, headers=headers
             )
 
-            stock_prices = [StockPrice(**o) for o in response.json()]
+            batch_response = BatchResponse(**response.json())
             self.__logger.info(f"Completed batch stock price request for {symbols}")
-            return stock_prices
+            return batch_response
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 

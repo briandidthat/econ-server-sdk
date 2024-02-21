@@ -6,12 +6,11 @@ from pydantic import BaseModel, Field, ConfigDict
 
 
 # CRYPTO API MODELS
-class SpotPrice(BaseModel):
-    symbol: str
-    currency: str
-    amount: str
-    date: str
 
+class AssetPrice(BaseModel):
+    symbol: str
+    price: str
+    date: str
 
 class Statistic(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
@@ -38,13 +37,7 @@ class BatchRequest(BaseModel):
 class BatchResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    spot_prices: List[SpotPrice] = Field(alias="spotPrices")
-
-
-# STOCK API MODELS
-class StockPrice(BaseModel):
-    symbol: str
-    price: str
+    asset_prices: List[AssetPrice] = Field(alias="assetPrices")
 
 
 # FRED API MODELS
