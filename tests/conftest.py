@@ -4,8 +4,7 @@ from src.econ_server_sdk_briandidthat.models import (
     Request,
     BatchRequest,
     BatchResponse,
-    SpotPrice,
-    StockPrice,
+    AssetPrice,
     Statistic,
     Observation,
     FredResponse,
@@ -13,21 +12,19 @@ from src.econ_server_sdk_briandidthat.models import (
 
 
 @pytest.fixture(scope="module")
-def spot_price_mock() -> SpotPrice:
-    return SpotPrice(
+def spot_price_mock() -> AssetPrice:
+    return AssetPrice(
         symbol="BTC",
-        currency="USD",
-        amount="40000.00",
+        price="40000.00",
         date="2024-01-01",
     )
 
 
 @pytest.fixture(scope="module")
 def historical_spot_price_mock():
-    return SpotPrice(
+    return AssetPrice(
         symbol="BTC",
-        currency="USD",
-        amount="30000.00",
+        price="30000.00",
         date="2023-01-01",
     )
 
@@ -44,25 +41,22 @@ def batch_request_mock() -> BatchRequest:
 
 
 @pytest.fixture(scope="module")
-def batch_response_mock() -> BatchResponse:
+def batch_crypto_response_mock() -> BatchResponse:
     return BatchResponse(
-        spot_prices=[
-            SpotPrice(
+        asset_prices=[
+            AssetPrice(
                 symbol="BTC",
-                currency="USD",
-                amount="40000.00",
+                price="40000.00",
                 date="2024-01-01",
             ),
-            SpotPrice(
+            AssetPrice(
                 symbol="ETH",
-                currency="USD",
-                amount="2000.00",
+                price="2000.00",
                 date="2024-01-01",
             ),
-            SpotPrice(
+            AssetPrice(
                 symbol="AVAX",
-                currency="USD",
-                amount="30.00",
+                price="30.00",
                 date="2024-01-01",
             ),
         ]
@@ -84,8 +78,30 @@ def statistic_mock() -> Statistic:
 
 
 @pytest.fixture(scope="module")
-def stock_price_mock() -> StockPrice:
-    return StockPrice(symbol="AAPL", price="200.00")
+def stock_price_mock() -> AssetPrice:
+    return AssetPrice(symbol="AAPL", price="200.00", date="2024-01-01")
+
+@pytest.fixture(scope="module")
+def batch_stock_response_mock() -> BatchResponse:
+    return BatchResponse(
+        asset_prices=[
+            AssetPrice(
+                symbol="AAPL",
+                price="150.00",
+                date="2024-01-01",
+            ),
+            AssetPrice(
+                symbol="GOOG",
+                price="161.00",
+                date="2024-01-01",
+            ),
+            AssetPrice(
+                symbol="TSLA",
+                price="400.00",
+                date="2024-01-01",
+            ),
+        ]
+    )
 
 
 @pytest.fixture(scope="module")
