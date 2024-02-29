@@ -81,6 +81,7 @@ def statistic_mock() -> Statistic:
 def stock_price_mock() -> AssetPrice:
     return AssetPrice(symbol="AAPL", price="200.00", date="2024-01-01")
 
+
 @pytest.fixture(scope="module")
 def batch_stock_response_mock() -> BatchResponse:
     return BatchResponse(

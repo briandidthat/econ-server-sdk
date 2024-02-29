@@ -3,7 +3,7 @@ from typing import Any, List
 
 import httpx
 
-from .models import (
+from src.econ_server_sdk_briandidthat.models import (
     Observation,
     AssetPrice,
     FredOperation,
@@ -247,6 +247,14 @@ class StockApi:
 
 
 class EconServerClient:
+    """This class encapsulates the logic for making requests to the econ server\n
+    Args:\n
+        username: username of choice\n
+        base_url: url of the deployed econ-server instance\n
+        fred_api_key: FRED api key\n
+        stock_api_key: Twelve data api key
+    """
+
     def __init__(
         self, username: str, base_url: str, fred_api_key: str, stock_api_key: str
     ):
