@@ -4,9 +4,9 @@ from httpx import Response
 url = "http://locahost:8080"
 username = "tester"
 api_key = "abcdefg"
-headers = {"caller": username, "apiKey": api_key}
+headers = {"apiKey": api_key}
 
-fred_api = FredApi(username, url, api_key)
+fred_api = FredApi(url, api_key)
 
 
 def test_get_most_recent_observation(observation_mock, respx_mock):
