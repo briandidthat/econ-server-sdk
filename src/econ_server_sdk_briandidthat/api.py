@@ -18,24 +18,22 @@ logging.basicConfig(level=logging.INFO)
 class CryptoApi:
     """This class encapsulates the logic for making crypto spot price requests from the price server\n
     Args:\n
-        username: username of choice\n
         base_url: url of the deployed econ-server instance\n
     """
 
-    def __init__(self, username: str, base_url: str):
-        self.__caller = username
+    def __init__(self, base_url: str):
         self.__base_url = base_url
         self.__logger = logging.getLogger("Crypto-API")
 
+    def set_base_url(self, base_url: str):
+        self.__base_url = base_url
+
     def get_spot_price(self, symbol: str) -> AssetPrice:
         params = {"symbol": symbol}
-        headers = dict(caller=self.__caller)
 
         try:
             self.__logger.debug(f"Fetching spot price for {symbol}")
-            response = httpx.get(
-                f"{self.__base_url}/crypto/spot", params=params, headers=headers
-            )
+            response = httpx.get(f"{self.__base_url}/crypto/spot", params=params)
             spot_price = AssetPrice(**response.json())
             self.__logger.info(f"Completed spot price request for {symbol}")
             return spot_price
@@ -44,16 +42,13 @@ class CryptoApi:
 
     def get_historical_spot_price(self, symbol: str, date: str) -> AssetPrice:
         params = {"symbol": symbol, "date": date}
-        headers = dict(caller=self.__caller)
 
         try:
             self.__logger.debug(
                 f"Fetching historical spot price for {symbol}. Date: {date}"
             )
             response = httpx.get(
-                f"{self.__base_url}/crypto/spot/historical",
-                params=params,
-                headers=headers,
+                f"{self.__base_url}/crypto/spot/historical", params=params
             )
             historical_spot_price = AssetPrice(**response.json())
             self.__logger.info(
@@ -67,16 +62,13 @@ class CryptoApi:
         self, symbol: str, start_date: str, end_date: str
     ) -> Statistic:
         params = {"symbol": symbol, "startDate": start_date, "endDate": end_date}
-        headers = dict(caller=self.__caller)
 
         try:
             self.__logger.debug(
                 f"Fetching price statistics for {symbol}. Timeframe: {start_date} -> {end_date}"
             )
             response = httpx.get(
-                f"{self.__base_url}/crypto/spot/statistics",
-                params=params,
-                headers=headers,
+                f"{self.__base_url}/crypto/spot/statistics", params=params
             )
             self.__logger.info("Response: ", response.json())
             statistic = Statistic(**response.json())
@@ -89,7 +81,7 @@ class CryptoApi:
 
     def get_multiple_spot_prices(self, symbols: list[str]) -> BatchResponse:
         params = {"symbols": ",".join(symbols)}
-        headers = dict(caller=self.__caller)
+        headers = dict()
 
         try:
             self.__logger.debug(f"Fetching multiple spot prices for: {symbols}")
@@ -105,7 +97,7 @@ class CryptoApi:
     def get_multiple_historical_spot_prices(
         self, batch_request: BatchRequest
     ) -> BatchResponse:
-        headers = dict(caller=self.__caller)
+        headers = dict()
         symbols = ",".join([s.symbol for s in batch_request.requests])
 
         try:
@@ -128,13 +120,11 @@ class CryptoApi:
 class FredApi:
     """This class contains the logic for making FRED requests\n
     Args:\n
-        username: username of choice\n
         base_url: url of the deployed econ-server instance\n
         api_key: FRED api key
     """
 
-    def __init__(self, username: str, base_url: str, api_key: str):
-        self.__caller = username
+    def __init__(self, base_url: str, api_key: str):
         self.__base_url = base_url
         self.__api_key = api_key
         self.__logger = logging.getLogger("Fred-API")
@@ -146,13 +136,16 @@ class FredApi:
         self.__api_key = api_key
         self.__logger.info("Fred API key updated")
 
+    def set_base_url(self, base_url: str):
+        self.__base_url = base_url
+
     def get_observations(
         self, operation: FredOperation, params: dict[str, Any]
     ) -> List[Observation]:
         # default file type is XML so if not provided in params dictionary, manually set to json
         if params.get("file_type") is None:
             params["file_type"] = "json"
-        headers = dict(apiKey=self.__api_key, caller=self.__caller)
+        headers = dict(apiKey=self.__api_key)
 
         try:
             self.__logger.debug(f"Fetching observations for {operation}")
@@ -173,7 +166,9 @@ class FredApi:
         # default file type is XML so if not provided in params dictionary, manually set to json
         if params.get("file_type") is None:
             params["file_type"] = "json"
-        headers = dict(apiKey=self.__api_key, caller=self.__caller)
+        headers = dict(
+            apiKey=self.__api_key,
+        )
 
         try:
             self.__logger.debug(f"Fetching most recent observation for {operation}")
@@ -193,15 +188,13 @@ class FredApi:
 class StockApi:
     """This class encapsulates the logic for making stock price requests\n
     Args:\n
-        username: username of choice\n
         base_url: url of the deployed econ-server instance\n
         api_key: Twelve data api key
     """
 
-    def __init__(self, username: str, base_url: str, api_key: str):
+    def __init__(self, base_url: str, api_key: str):
         self.__api_key = api_key
         self.__base_url = base_url
-        self.__caller = username
         self.__logger = logging.getLogger("Stock-API")
 
     def get_api_key(self) -> str:
@@ -211,9 +204,12 @@ class StockApi:
         self.__api_key = api_key
         self.__logger.info("Stock API key updated")
 
+    def set_base_url(self, base_url: str):
+        self.__base_url = base_url
+
     def get_stock_price(self, symbol: str) -> AssetPrice:
         params = {"symbol": symbol}
-        headers = dict(apiKey=self.__api_key, caller=self.__caller)
+        headers = dict(apiKey=self.__api_key)
 
         try:
             self.__logger.debug(f"Fetching stock price for {symbol}")
@@ -228,7 +224,7 @@ class StockApi:
 
     def get_multiple_stock_prices(self, symbols: list[str]) -> BatchResponse:
         params = {"symbols": ",".join(symbols)}
-        headers = dict(apiKey=self.__api_key, caller=self.__caller)
+        headers = dict(apiKey=self.__api_key)
 
         try:
             self.__logger.debug(f"Fetching multiple stock prices for {symbols}")
@@ -249,15 +245,17 @@ class StockApi:
 class EconServerClient:
     """This class encapsulates the logic for making requests to the econ server\n
     Args:\n
-        username: username of choice\n
         base_url: url of the deployed econ-server instance\n
         fred_api_key: FRED api key\n
         stock_api_key: Twelve data api key
     """
 
-    def __init__(
-        self, username: str, base_url: str, fred_api_key: str, stock_api_key: str
-    ):
-        self.crypto_api = CryptoApi(username, base_url)
-        self.fred_api = FredApi(username, base_url, fred_api_key)
-        self.stock_api = StockApi(username, base_url, stock_api_key)
+    def __init__(self, base_url: str, fred_api_key: str, stock_api_key: str):
+        self.crypto_api = CryptoApi(base_url)
+        self.fred_api = FredApi(base_url, fred_api_key)
+        self.stock_api = StockApi(base_url, stock_api_key)
+
+    def set_base_url(self, base_url: str):
+        self.crypto_api.set_base_url(base_url)
+        self.fred_api.set_base_url(base_url)
+        self.stock_api.set_base_url(base_url)
