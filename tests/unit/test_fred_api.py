@@ -2,7 +2,6 @@ from src.econ_server_sdk_briandidthat.api import FredApi, FredOperation
 from httpx import Response
 
 url = "http://locahost:8080"
-username = "tester"
 api_key = "abcdefg"
 headers = {"apiKey": api_key}
 
@@ -16,7 +15,7 @@ def test_get_most_recent_observation(observation_mock, respx_mock):
         headers=headers,
     ).mock(return_value=Response(200, content=observation_mock.model_dump_json()))
     response = fred_api.get_most_recent_observation(
-        FredOperation.AVERAGE_MORTGAGE_RATE, {"file_type": "json"}
+        FredOperation.AVERAGE_MORTGAGE_RATE, {}
     )
 
     assert response == observation_mock
@@ -28,8 +27,6 @@ def test_get_observations(fred_response_mock, respx_mock):
         params={"file_type": "json"},
         headers=headers,
     ).mock(return_value=Response(200, content=fred_response_mock.model_dump_json()))
-    response = fred_api.get_observations(
-        FredOperation.AVERAGE_MORTGAGE_RATE, {"file_type": "json"}
-    )
+    response = fred_api.get_observations(FredOperation.AVERAGE_MORTGAGE_RATE, {})
 
     assert len(response) == len(fred_response_mock.observations)

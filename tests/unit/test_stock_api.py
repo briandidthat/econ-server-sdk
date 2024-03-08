@@ -2,7 +2,6 @@ from src.econ_server_sdk_briandidthat.api import StockApi
 from httpx import Response
 
 url = "http://locahost:8080"
-username = "tester"
 api_key = "abcdefg"
 headers = {"apiKey": api_key}
 
