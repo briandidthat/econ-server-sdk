@@ -1,16 +1,19 @@
+from datetime import date
+
 from enum import StrEnum
 
 from typing import List
 
 from pydantic import BaseModel, Field, ConfigDict
 
+# CRYPTO AND STOCK MODELS
 
-# CRYPTO API MODELS
 
 class AssetPrice(BaseModel):
     symbol: str
     price: str
     date: str
+
 
 class Statistic(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
@@ -26,8 +29,13 @@ class Statistic(BaseModel):
 
 
 class Request(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     symbol: str
-    date: str
+    start_date: str = Field(
+        alias="startDate", default=date.today().strftime("%Y-%m-%d")
+    )
+    end_date: str = Field(alias="endDate", default=date.today().strftime("%Y-%m-%d"))
 
 
 class BatchRequest(BaseModel):
@@ -41,6 +49,8 @@ class BatchResponse(BaseModel):
 
 
 # FRED API MODELS
+
+
 class FredOperation(StrEnum):
     """
     This enum contains the FRED series id's that are relevant to this project
