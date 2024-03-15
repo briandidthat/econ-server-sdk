@@ -27,15 +27,15 @@ class CryptoApi:
 
     def set_base_url(self, base_url: str):
         self.__base_url = base_url
+        self.__logger.info("Base URL updated")
 
     def get_spot_price(self, symbol: str) -> AssetPrice:
         params = dict(symbol=symbol)
 
         try:
-            self.__logger.debug(f"Fetching spot price for {symbol}")
             response = httpx.get(f"{self.__base_url}/crypto/spot", params=params)
             spot_price = AssetPrice(**response.json())
-            self.__logger.info(f"Completed spot price request for {symbol}")
+            self.__logger.info(f"Completed spot price request. {spot_price}")
             return spot_price
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
@@ -44,15 +44,12 @@ class CryptoApi:
         params = dict(symbol=symbol, date=date)
 
         try:
-            self.__logger.debug(
-                f"Fetching historical spot price for {symbol}. Date: {date}"
-            )
             response = httpx.get(
                 f"{self.__base_url}/crypto/spot/historical", params=params
             )
             historical_spot_price = AssetPrice(**response.json())
             self.__logger.info(
-                f"Completed historical spot price request for {symbol}. Date: {date}"
+                f"Completed historical spot price request. {historical_spot_price}"
             )
             return historical_spot_price
         except httpx.HTTPError as exc:
@@ -64,17 +61,11 @@ class CryptoApi:
         params = dict(symbol=symbol, startDate=start_date, endDate=end_date)
 
         try:
-            self.__logger.debug(
-                f"Fetching price statistics for {symbol}. Timeframe: {start_date} -> {end_date}"
-            )
             response = httpx.get(
                 f"{self.__base_url}/crypto/spot/statistics", params=params
             )
-            self.__logger.info("Response: ", response.json())
             statistic = Statistic(**response.json())
-            self.__logger.info(
-                f"Completed statistics request for {symbol}. Timeframe: {start_date} -> {end_date}"
-            )
+            self.__logger.info(f"Completed statistics request. {statistic}")
             return statistic
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
@@ -83,10 +74,9 @@ class CryptoApi:
         params = dict(symbols=",".join(symbols))
 
         try:
-            self.__logger.debug(f"Fetching spot prices for: {symbols}")
             response = httpx.get(f"{self.__base_url}/crypto/spot/batch", params=params)
             spot_prices = BatchResponse(**response.json())
-            self.__logger.info(f"Completed batch request for {symbols}.")
+            self.__logger.info(f"Completed batch request. {spot_prices}.")
             return spot_prices
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
@@ -94,16 +84,15 @@ class CryptoApi:
     def get_multiple_historical_spot_prices(
         self, batch_request: BatchRequest
     ) -> BatchResponse:
-        symbols = ",".join([s.symbol for s in batch_request.requests])
-
         try:
-            self.__logger.debug(f"Fetching historical spot prices for: {symbols}")
             response = httpx.post(
                 f"{self.__base_url}/crypto/spot/batch/historical",
                 json=batch_request.model_dump_json(),
             )
             historical_spot_prices = BatchResponse(**response.json())
-            self.__logger.info(f"Completed batch historical request for {symbols}")
+            self.__logger.info(
+                f"Completed batch historical request. {historical_spot_prices}"
+            )
             return historical_spot_prices
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
@@ -131,6 +120,7 @@ class FredApi:
 
     def set_base_url(self, base_url: str):
         self.__base_url = base_url
+        self.__logger.info("Base URL updated")
 
     def get_observations(
         self, operation: FredOperation, params: dict[str, Any]
@@ -141,7 +131,6 @@ class FredApi:
         headers = dict(apiKey=self.__api_key)
 
         try:
-            self.__logger.debug(f"Fetching observations for {operation}")
             response = httpx.get(
                 f"{self.__base_url}/fred/observations/{operation}",
                 params=params,
@@ -159,12 +148,9 @@ class FredApi:
         # default file type is XML so if not provided in params dictionary, manually set to json
         if params.get("file_type") is None:
             params["file_type"] = "json"
-        headers = dict(
-            apiKey=self.__api_key,
-        )
+        headers = dict(apiKey=self.__api_key)
 
         try:
-            self.__logger.debug(f"Fetching most recent observation for {operation}")
             response = httpx.get(
                 f"{self.__base_url}/fred/observations/current/{operation}",
                 params=params,
@@ -201,12 +187,12 @@ class StockApi:
 
     def set_base_url(self, base_url: str):
         self.__base_url = base_url
+        self.__logger.info("Base URL updated")
 
     def get_stock_price(self, symbol: str) -> AssetPrice:
         params = dict(symbol=symbol)
 
         try:
-            self.__logger.debug(f"Fetching price for {symbol}")
             response = httpx.get(
                 f"{self.__base_url}/stocks", params=params, headers=self.__headers
             )
@@ -216,28 +202,45 @@ class StockApi:
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
+    def get_historical_stock_price(self, symbol: str, date: str) -> AssetPrice:
+        params = dict(symbol=symbol, date=date)
+
+        try:
+            response = httpx.get(
+                f"{self.__base_url}/stocks/historical",
+                params=params,
+                headers=self.__headers,
+            )
+            stock_price = AssetPrice(**response.json())
+            return stock_price
+        except httpx.HTTPError as exc:
+            self.__logger.error(f"RequestException: {exc}")
+
     def get_multiple_stock_prices(self, symbols: list[str]) -> BatchResponse:
         params = dict(symbols=",".join(symbols))
 
         try:
-            self.__logger.debug(f"Fetching prices for {symbols}")
             response = httpx.get(
                 f"{self.__base_url}/stocks/batch", params=params, headers=self.__headers
             )
-
             batch_response = BatchResponse(**response.json())
             self.__logger.info(f"Completed batch stock price request for {symbols}")
             return batch_response
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
-    def get_historical_stock_price(self, symbol: str, date: str):
-        params = dict(symbol=symbol, date=date)
-
+    def get_multiple_historical_stock_prices(
+        self, batchRequest: BatchRequest
+    ) -> BatchResponse:
         try:
-            self.__logger.debug(f"Fetching price for {symbol} on {date}.")
+            response = httpx.post(
+                f"{self.__base_url}/stocks/historical",
+                json=batchRequest.model_dump_json(),
+            )
+            batch_response = BatchResponse(**response.json())
+            return batch_response
         except httpx.HTTPError as exc:
-            self.__logger(f"RequestException: {exc}")
+            self.__logger.error(f"RequestException: {exc}")
 
 
 # ======================================== ECON SERVER CLIENT (CONTAINS ALL APIS) ========================================
