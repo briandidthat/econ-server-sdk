@@ -83,6 +83,17 @@ def stock_price_mock() -> AssetPrice:
 
 
 @pytest.fixture(scope="module")
+def batch_historical_request_mock() -> BatchRequest:
+    return BatchRequest(
+        requests=[
+            Request(symbol="AAPL", date="2024-01-01"),
+            Request(symbol="GOOG", date="2024-01-01"),
+            Request(symbol="TSLA", date="2024-01-01"),
+        ]
+    )
+
+
+@pytest.fixture(scope="module")
 def batch_stock_response_mock() -> BatchResponse:
     return BatchResponse(
         asset_prices=[

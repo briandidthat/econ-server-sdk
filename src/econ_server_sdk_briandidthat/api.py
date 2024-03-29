@@ -249,8 +249,9 @@ class StockApi:
     ) -> BatchResponse:
         try:
             response = httpx.post(
-                f"{self.__base_url}/stocks/historical",
+                f"{self.__base_url}/stocks/batch/historical",
                 json=batchRequest.model_dump_json(),
+                headers=self.__headers
             )
             batch_response = BatchResponse(**response.json())
             return batch_response

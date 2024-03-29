@@ -30,3 +30,37 @@ def test_get_multiple_stock_prices(batch_stock_response_mock, respx_mock):
     response = stock_api.get_multiple_stock_prices(["AAPL", "GOOG", "TSLA"])
 
     assert response == batch_stock_response_mock
+
+
+def test_get_historical_stock_price(stock_price_mock, respx_mock):
+    respx_mock.get(
+        f"{url}/stocks/historical",
+        params={"symbol": "AAPL", "date": "2024-01-01"},
+        headers=headers,
+    ).mock(
+        return_value=Response(
+            status_code=200, content=stock_price_mock.model_dump_json()
+        )
+    )
+    response = stock_api.get_historical_stock_price("AAPL", "2024-01-01")
+
+    assert response == stock_price_mock
+
+
+def test_get_multiple_hostorical_stock_prices(
+    batch_historical_request_mock, batch_stock_response_mock, respx_mock
+):
+    respx_mock.post(f"{url}/stocks/batch/historical", headers=headers).mock(
+        return_value=Response(
+            status_code=200, content=batch_stock_response_mock.model_dump_json()
+        )
+    ).mock(
+        return_value=Response(
+            status_code=200, content=batch_stock_response_mock.model_dump_json()
+        )
+    )
+    response = stock_api.get_multiple_historical_stock_prices(
+        batch_historical_request_mock
+    )
+
+    assert response == batch_stock_response_mock
