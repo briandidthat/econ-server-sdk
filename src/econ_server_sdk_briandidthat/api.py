@@ -216,6 +216,21 @@ class StockApi:
         except httpx.HTTPError as exc:
             self.__logger.error(f"RequestException: {exc}")
 
+    def get_stock_price_statistics(self, symbol: str, start_date: str) -> Statistic:
+        params = dict(symbol=symbol, startDate=start_date)
+
+        try:
+            response = httpx.get(
+                f"{self.__base_url}/stocks/statistics",
+                params=params,
+                headers=self.__headers,
+            )
+            statistic = Statistic(**response.json())
+            self.__logger.info("Completed statistic request for {symbol}")
+            return statistic
+        except httpx.HTTPError as exc:
+            self.__logger.error(f"RequestException: {exc}")
+
     def get_multiple_stock_prices(self, symbols: list[str]) -> BatchResponse:
         params = dict(symbols=",".join(symbols))
 
@@ -234,8 +249,9 @@ class StockApi:
     ) -> BatchResponse:
         try:
             response = httpx.post(
-                f"{self.__base_url}/stocks/historical",
+                f"{self.__base_url}/stocks/batch/historical",
                 json=batchRequest.model_dump_json(),
+                headers=self.__headers
             )
             batch_response = BatchResponse(**response.json())
             return batch_response
