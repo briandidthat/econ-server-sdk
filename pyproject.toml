@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "econ_server_sdk_briandidthat"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
-  { name="briandidthat", email="author@example.com" },
+  { name="briandidthat" }
 ]
 description = "Sdk to simplify fetching economic data using the econ-server project"
 readme = "README.md"
