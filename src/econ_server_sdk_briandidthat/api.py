@@ -3,7 +3,7 @@ from typing import Any, List
 
 import httpx
 
-from src.econ_server_sdk_briandidthat.models import (
+from .models import (
     Observation,
     AssetPrice,
     FredOperation,
