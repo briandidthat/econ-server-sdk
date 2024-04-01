@@ -1,0 +1,21 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      # define the package manager and dependencies for app
+      - python/install-packages:
+          pkg-manager: pip
+          pip-dependency-file: requirements.txt
+      - run:
+          name: Test
+          command: python3 -m pytest
+
+workflows:
+  econ-server-sdk:
+    jobs:
+      - build
