@@ -152,7 +152,7 @@ class FredApi:
 
         try:
             response = httpx.get(
-                f"{self.__base_url}/fred/observations/current/{operation}",
+                f"{self.__base_url}/fred/observations/{operation}/recent",
                 params=params,
                 headers=headers,
             )
